@@ -298,4 +298,54 @@ const App: React.FC = () => {
                     <td className="p-4 text-slate-600 text-sm">{centers.find(c => c.id === u.centerId)?.name || 'Samsic Global'}</td>
                     <td className="p-4 text-[10px] font-bold uppercase tracking-widest"><span className={`px-2 py-1 rounded-md ${u.role === UserRole.ADMIN ? 'bg-purple-100 text-purple-700' : 'bg-slate-100 text-slate-600'}`}>{u.role}</span></td>
                     <td className="p-4 text-right">
-                      <button onClick={() => { setEditingUser(u); setIsUserModalOpen(true); }} className="mr-3 text-blue-600
+                      <button onClick={() => { setEditingUser(u); setIsUserModalOpen(true); }} className="mr-3 text-blue-600 font-bold text-xs hover:underline">Editar</button>
+                      <button onClick={() => setUsers(users.filter(x => x.id !== u.id))} className="text-red-600 font-bold text-xs hover:underline">Eliminar</button>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      )}
+
+      {activeTab === 'centers' && (
+        <div className="space-y-6 animate-in fade-in duration-300 p-4 md:p-0">
+          <div className="flex justify-between items-center">
+            <h2 className="text-2xl font-bold text-[#1a2b3c]">{t('work_centers')}</h2>
+            <button onClick={() => { setEditingCenter(null); setIsCenterModalOpen(true); }} className="bg-[#1a2b3c] text-white px-6 py-2.5 rounded-xl font-bold hover:bg-slate-800 transition-colors shadow-lg">{t('add_center')}</button>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {centers.map(c => (
+              <div key={c.id} className="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm flex flex-col hover:shadow-xl transition-all group">
+                <h3 className="font-bold text-xl text-slate-800 leading-tight mb-2">{c.name}</h3>
+                <div className="flex items-center space-x-2 text-slate-500 text-sm">
+                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" /><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" /></svg>
+                  <span>{c.location || 'Ubicación no especificada'}</span>
+                </div>
+                <div className="flex justify-end mt-8 space-x-4 pt-4 border-t border-slate-50 opacity-0 group-hover:opacity-100 transition-opacity">
+                  <button onClick={() => { setEditingCenter(c); setIsCenterModalOpen(true); }} className="text-blue-600 font-bold text-xs hover:underline uppercase tracking-widest">Editar</button>
+                  <button onClick={() => deleteCenter(c.id)} className="text-red-600 font-bold text-xs hover:underline uppercase tracking-widest">Eliminar</button>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+
+      <DocModal 
+        isOpen={isDocModalOpen} 
+        onClose={() => setIsDocModalOpen(false)} 
+        onSave={saveDoc} 
+        editingDoc={editingDoc} 
+        workCenters={centers} 
+        language={language}
+      />
+      <UserModal isOpen={isUserModalOpen} onClose={() => setIsUserModalOpen(false)} onSave={saveUser} editingUser={editingUser} workCenters={centers} />
+      <CenterModal isOpen={isCenterModalOpen} onClose={() => setIsCenterModalOpen(false)} onSave={saveCenter} editingCenter={editingCenter} />
+      <ChatBot docs={filteredDocs} language={language} />
+    </Layout>
+  );
+};
+
+export default App;
